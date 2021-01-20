@@ -16,10 +16,12 @@ package com.example.android.roomwordssample;
  * limitations under the License.
  */
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-
 import android.content.Context;
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,10 +31,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * This is not meant to be a full set of tests. For simplicity, most of your samples do not
@@ -76,9 +76,9 @@ public class WordDaoTest {
 
     @Test
     public void getAllWords() throws Exception {
-        Word word = new Word("aaa");
+        Word word = new Word("aba");
         mWordDao.insert(word);
-        Word word2 = new Word("bbb");
+        Word word2 = new Word("abc");
         mWordDao.insert(word2);
         List<Word> allWords = LiveDataTestUtil.getValue(mWordDao.getAlphabetizedWords());
         assertEquals(allWords.get(0).getWord(), word.getWord());
