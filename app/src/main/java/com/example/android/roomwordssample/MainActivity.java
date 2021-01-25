@@ -18,15 +18,17 @@ package com.example.android.roomwordssample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
+
+        // 通过向adapter的构造器传递WordDiffer，将新旧list的比较结果传递至父类listadapter，
+        // 通过构建config在asynclistdiffer进行数据集的实时更新处理
         final WordListAdapter adapter = new WordListAdapter(new WordListAdapter.WordDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -51,9 +56,12 @@ public class MainActivity extends AppCompatActivity {
         // Add an observer on the LiveData returned by getAlphabetizedWords.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
-        mWordViewModel.getAllWords().observe(this, words -> {
-            // Update the cached copy of the words in the adapter.
-            adapter.submitList(words);
+        mWordViewModel.getAllWords().observe(this, new Observer<List<Word>>() {
+            @Override
+            public void onChanged(List<Word> words) {
+                // Update the cached copy of the words in the adapter.
+                adapter.submitList(words);
+            }
         });
 
         FloatingActionButton fab = findViewById(R.id.fab);
